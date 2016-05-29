@@ -20,7 +20,7 @@ import domain.Poslanik;
 public class ParlamentAPIKomunikacija {
 	
 	private static final String URL = "http://147.91.128.71:9090/parlament/api/members";
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
 	
 	//kopirao metode sa vezbe ali ih detaljno proucio
 	public static List<Poslanik> vratiPoslanike(){

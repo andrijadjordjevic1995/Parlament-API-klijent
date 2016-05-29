@@ -9,10 +9,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
+
+import gui.model.PoslanikTableModel;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUIParlament extends JFrame {
 
@@ -32,6 +37,7 @@ public class GUIParlament extends JFrame {
 	 * Create the frame.
 	 */
 	public GUIParlament() {
+		setTitle("Parlament Members");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
@@ -53,6 +59,8 @@ public class GUIParlament extends JFrame {
 	private JTable getTable() {
 		if (table == null) {
 			table = new JTable();
+			PoslanikTableModel tableModel = new PoslanikTableModel(null);
+			table.setModel(tableModel);
 		}
 		return table;
 	}
@@ -84,6 +92,11 @@ public class GUIParlament extends JFrame {
 	private JButton getBtnGetMembers() {
 		if (btnGetMembers == null) {
 			btnGetMembers = new JButton("Get members");
+			btnGetMembers.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					GUIKontroler.vratiPoslanike();
+				}
+			});
 			btnGetMembers.setPreferredSize(new Dimension(120, 25));
 		}
 		return btnGetMembers;
