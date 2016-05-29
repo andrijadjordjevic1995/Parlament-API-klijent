@@ -10,13 +10,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 
+import domain.Poslanik;
 import gui.model.PoslanikTableModel;
+
 
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 
 public class GUIParlament extends JFrame {
@@ -37,8 +42,15 @@ public class GUIParlament extends JFrame {
 	 * Create the frame.
 	 */
 	public GUIParlament() {
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				GUIKontroler.izadji();
+			}
+
+		});
 		setTitle("Parlament Members");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 600, 400);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -94,7 +106,13 @@ public class GUIParlament extends JFrame {
 			btnGetMembers = new JButton("Get members");
 			btnGetMembers.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					GUIKontroler.vratiPoslanike();
+					if(GUIKontroler.vratiPoslanike()){
+						textAreaSouth.setText(textAreaSouth.getText()+"Poslanici su "
+								+ "preuzeti sa servisa\n");
+					}else{
+						textAreaSouth.setText(textAreaSouth.getText()+"Greska pri preuzimanju "
+								+ "poslanika sa servisa\n");
+					}
 				}
 			});
 			btnGetMembers.setPreferredSize(new Dimension(120, 25));
@@ -104,6 +122,16 @@ public class GUIParlament extends JFrame {
 	private JButton getBtnFillTable() {
 		if (btnFillTable == null) {
 			btnFillTable = new JButton("Fill table");
+			btnFillTable.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(GUIKontroler.ucitajPoslanike()){
+						textAreaSouth.setText(textAreaSouth.getText()+"Tabela je popunjena podacima\n");
+					}else{
+						textAreaSouth.setText(textAreaSouth.getText()+"Greska pri popunjavanju tabele\n");
+					}
+					
+				}
+			});
 			btnFillTable.setPreferredSize(new Dimension(120, 25));
 		}
 		return btnFillTable;
@@ -114,5 +142,9 @@ public class GUIParlament extends JFrame {
 			btnUpdateMembers.setPreferredSize(new Dimension(120, 25));
 		}
 		return btnUpdateMembers;
+	}
+	public void osveziTabelu(LinkedList<Poslanik> poslanici){
+		PoslanikTableModel model = (PoslanikTableModel)table.getModel();
+		model.osveziTabelu(poslanici);
 	}
 }

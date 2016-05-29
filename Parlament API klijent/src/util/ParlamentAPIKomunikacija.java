@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,13 +18,14 @@ import com.google.gson.JsonObject;
 
 import domain.Poslanik;
 
+
 public class ParlamentAPIKomunikacija {
 	
 	private static final String URL = "http://147.91.128.71:9090/parlament/api/members";
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy.");
 	
 	//kopirao metode sa vezbe ali ih detaljno proucio
-	public static List<Poslanik> vratiPoslanike(){
+	public List<Poslanik> vratiPoslanike(){
 		try {
 			String result = sendGet(URL);
 
@@ -53,7 +55,7 @@ public class ParlamentAPIKomunikacija {
 		return new LinkedList<Poslanik>();
 	}
 	
-	private static String sendGet(String url) {
+	private String sendGet(String url) {
 		URL obj;
 		String response = "";
 		try {
@@ -85,5 +87,27 @@ public class ParlamentAPIKomunikacija {
 		}
 		return response.toString();
 	}
-	
+	public LinkedList<Poslanik> parseMembers(JsonArray poslanici) {
+		LinkedList<Poslanik> poslaniciLista = new LinkedList<Poslanik>();
+
+		for (int i = 0; i < poslanici.size(); i++) {
+			JsonObject poslanikJson = (JsonObject) poslanici.get(i);
+
+			Poslanik p = new Poslanik();
+			p.setId(poslanikJson.get("id").getAsInt());
+			p.setIme(poslanikJson.get("ime").getAsString());
+			p.setPrezime(poslanikJson.get("prezime").getAsString());
+			try {
+				p.setDatumRodjenja(sdf.parse(poslanikJson.get("datumRodjenja").getAsString()));
+			} catch (ParseException e) {
+				
+			}catch(NullPointerException e){
+				
+			}
+
+			poslaniciLista.add(p);
+		}
+
+		return poslaniciLista;
+	}
 }

@@ -1,11 +1,15 @@
 package gui.model;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.table.AbstractTableModel;
 
 import domain.Poslanik;
+import util.ParlamentAPIKomunikacija;
 
 public class PoslanikTableModel extends AbstractTableModel {
 	private final String[] kolone = new String[] { "ID", "Name", "Last name", "Birth date" };
@@ -43,7 +47,11 @@ public class PoslanikTableModel extends AbstractTableModel {
 		case 2:
 			return p.getPrezime();
 		case 3:
-			return p.getDatumRodjenja();
+			Date d = p.getDatumRodjenja();
+			if(d != null)
+				return ParlamentAPIKomunikacija.sdf.format(d);
+			else
+				return null;
 		default:
 			return "/";
 		}
@@ -58,5 +66,39 @@ public class PoslanikTableModel extends AbstractTableModel {
 	public void osveziTabelu(List<Poslanik> poslanici){
 		this.poslanici = poslanici;
 		fireTableDataChanged();
+	}
+	@Override
+	public boolean isCellEditable(int rowIndex, int columnIndex) {
+		return (columnIndex > 0)? true : false;
+	}
+	@Override
+	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+		if(isCellEditable(rowIndex, columnIndex)){
+			Poslanik p = poslanici.get(rowIndex);
+			switch(columnIndex){
+			case 1:
+				String val = (String)aValue;
+				if(!(val.isEmpty()))
+					p.setIme(val);
+				else
+					JOptionPane.showMessageDialog(null, "Ime ne sme ostati prazno");
+				break;
+			case 2:
+				String val1 = (String)aValue;
+				if(!(val1.isEmpty()))
+					p.setPrezime(val1);
+				else
+					JOptionPane.showMessageDialog(null, "Prezime ne sme ostati prazno");
+				break;
+			case 3:
+				try {
+					Date d = ParlamentAPIKomunikacija.sdf.parse((String)aValue);
+					p.setDatumRodjenja(d);
+				} catch (ParseException e) {
+					JOptionPane.showMessageDialog(null, "Unesite datum u formatu dd.MM.yyyy");
+				}
+				
+			}
+		}
 	}
 }
