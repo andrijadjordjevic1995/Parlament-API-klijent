@@ -110,4 +110,5 @@ public class ParlamentAPIKomunikacija {
 
 		return poslaniciLista;
 	}
+	
 }

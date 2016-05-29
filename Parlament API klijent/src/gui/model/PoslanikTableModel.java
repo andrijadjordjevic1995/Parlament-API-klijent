@@ -22,7 +22,10 @@ public class PoslanikTableModel extends AbstractTableModel {
 			this.poslanici = poslanici;
 		}
 	}
-
+	
+	public List<Poslanik> vratiSvePoslanike(){
+		return poslanici;
+	}
 	@Override
 	public int getColumnCount() {
 		// TODO Auto-generated method stub

@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -59,6 +60,34 @@ public class GUIKontroler {
 		}
 		
 		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("data/serviceMembers.json")))){
+			
+			Gson gson = new GsonBuilder().setPrettyPrinting().create();
+			out.println(gson.toJson(poslaniciJson));
+			out.close();
+			return true;
+			
+		}catch(Exception e){
+			return false;
+		}
+		
+	}
+	public static boolean dopuniPoslanike(LinkedList<Poslanik> poslanici) {
+		
+		JsonArray poslaniciJson = new JsonArray();
+		for (Poslanik poslanik : poslanici) {
+			JsonObject p = new JsonObject();
+			
+			p.addProperty("id", poslanik.getId());
+			p.addProperty("ime", poslanik.getIme());
+			p.addProperty("prezime", poslanik.getPrezime());
+			if(poslanik.getDatumRodjenja() != null)
+				p.addProperty("datumRodjenja", komunikacija.sdf.format(poslanik.getDatumRodjenja()));
+			
+			poslaniciJson.add(p);
+			
+		}
+		
+		try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("data/updatedMembers.json")))){
 			
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
 			out.println(gson.toJson(poslaniciJson));

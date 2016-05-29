@@ -139,6 +139,14 @@ public class GUIParlament extends JFrame {
 	private JButton getBtnUpdateMembers() {
 		if (btnUpdateMembers == null) {
 			btnUpdateMembers = new JButton("Update members");
+			btnUpdateMembers.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					if(GUIKontroler.dopuniPoslanike((LinkedList<Poslanik>)((PoslanikTableModel)table.getModel()).vratiSvePoslanike()))
+						textAreaSouth.setText(textAreaSouth.getText()+"Izmenjeni podaci o poslanicima su sacuvani uspesno\n");
+					else
+						textAreaSouth.setText(textAreaSouth.getText()+"Greska pri cuvanju izmenjenih podataka o poslanicima\n");
+				}
+			});
 			btnUpdateMembers.setPreferredSize(new Dimension(120, 25));
 		}
 		return btnUpdateMembers;
